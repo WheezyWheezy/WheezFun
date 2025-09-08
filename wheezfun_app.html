@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WheezFun 💫</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      text-align: center;
+      padding: 5vw;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 90%;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 5vw;
+      border-radius: 2vw;
+      box-shadow: 0 1vw 2vw rgba(0,0,0,0.5);
+    }
+
+    input, select, button {
+      margin: 2vw 0;
+      padding: 2vw;
+      width: 90%;
+      border-radius: 1vw;
+      border: none;
+      font-size: 4vw;
+    }
+
+    button {
+      background: #ff4081;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e73370;
+    }
+
+    .clear-btn {
+      background: #00c853;
+      margin-top: 3vw;
+    }
+
+    .clear-btn:hover {
+      background: #009624;
+    }
+
+    .result {
+      margin-top: 5vw;
+      font-size: 5vw;
+      font-weight: bold;
+      color: #ffd700;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5vw;
+      border-radius: 2vw;
+      box-shadow: 0 1vw 2vw rgba(0,0,0,0.4);
+      display: none;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .error {
+      margin-top: 3vw;
+      font-size: 4vw;
+      color: #ff5252;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (min-width: 600px) {
+      input, select, button {
+        font-size: 1.2rem;
+        padding: 0.8rem;
+      }
+
+      .result {
+        font-size: 1.5rem;
+        padding: 1.2rem;
+      }
+
+      .error {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="formContainer">
+    <h1>✨ Bienvenue sur WheezFun ✨</h1>
+    <p>Découvre ton pourcentage d'amour ❤️ ou de réussite 🌟</p>
+    <input type="text" id="username" placeholder="Entre ton prénom ou nom">
+    <br>
+    <select id="sex">
+      <option value="homme">Homme ♂️</option>
+      <option value="femme">Femme ♀️</option>
+    </select>
+    <br>
+    <select id="choice">
+      <option value="love">Amour ❤️</option>
+      <option value="success">Réussite 🌟</option>
+    </select>
+    <br>
+    <button onclick="calculateResult()">Calculer</button>
+    <div class="error" id="errorMessage" style="display:none"></div>
+  </div>
+
+  <div class="result" id="result">
+    <div id="percentageText"></div>
+    <button class="clear-btn" id="clearBtn" onclick="clearForm()">🔄 Nouveau essai</button>
+  </div>
+
+  <script>
+    function calculateResult() {
+      let nameInput = document.getElementById("username").value.trim();
+      let errorDiv = document.getElementById("errorMessage");
+      errorDiv.style.display = "none";
+
+      let validName = /^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$/.test(nameInput);
+      if (!validName || nameInput === "") {
+        errorDiv.innerHTML = "Nom ou prénom incorrect, veuillez insérer un bon nom ou prénom.";
+        errorDiv.style.display = "block";
+        return;
+      }
+
+      let name = nameInput.toUpperCase();
+      let sex = document.getElementById("sex").value;
+      let choice = document.getElementById("choice").value;
+      let sum = 0;
+
+      for (let char of name) {
+        if (char >= 'A' && char <= 'Z') {
+          sum += char.charCodeAt(0) - 64;
+        }
+      }
+
+      let percentage = sum % 101;
+      let message = choice === "love"
+        ? `💖 ${nameInput}, ton pourcentage d'amour est de ${percentage}% !`
+        : `🚀 ${nameInput}, ton pourcentage de réussite est de ${percentage}% !`;
+
+      message += percentage >= 65 ? (sex === "homme" ? " 🎉 Tu es chanceux !" : " 🎉 Tu es chanceuse !") : " 😅 Pas de panique, tout peut changer !";
+
+      document.getElementById("formContainer").style.display = "none";
+      document.getElementById("percentageText").innerHTML = message;
+      document.getElementById("result").style.display = "block";
+      document.getElementById("clearBtn").style.display = "inline-block";
+    }
+
+    function clearForm() {
+      document.getElementById("username").value = "";
+      document.getElementById("sex").selectedIndex = 0;
+      document.getElementById("choice").selectedIndex = 0;
+      document.getElementById("result").style.display = "none";
+      document.getElementById("formContainer").style.display = "block";
+      document.getElementById("errorMessage").style.display = "none";
+    }
+  </script>
+</body>
+</html>
